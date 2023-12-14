@@ -69,11 +69,6 @@ def insert_course(session, course_name, description, instructor_id, start_date, 
     session.add(new_course)
     session.commit()
     print("Course added successfully!")
-class UserCourseProgress(Base):
-    __tablename__ = 'user_course_progress'
-    progress_id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.user_id'))
-    course_id = Column(Integer, ForeignKey('courses.course_id'))
 
 # Add this line to the existing code
 Base.metadata.create_all(bind=engine)
