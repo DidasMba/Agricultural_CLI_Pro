@@ -41,4 +41,10 @@ enrollments = Table(
     Column('enrollment_id', Integer, primary_key=True),
     Column('user_id', Integer, ForeignKey('users.user_id')),
     Column('course_id', Integer, ForeignKey('courses.course_id'))
-)
+)  
+
+class UserCourseProgress(Base):
+    __tablename__ = 'user_course_progress'
+    progress_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.user_id'))
+    course_id = Column(Integer, ForeignKey('courses.course_id'))
