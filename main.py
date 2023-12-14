@@ -70,12 +70,3 @@ def insert_course(session, course_name, description, instructor_id, start_date, 
     session.commit()
     print("Course added successfully!")
 
-# Examples
-query_users(session)
-insert_user(session, 'daniel_moan', 'hashed_password', 'student')
-
-query_courses(session)
-insert_course(session, 'Introduction to Python', 'Learn Python programming basics', 1, '2023-01-01', '2023-02-01')
-
-# Close the session when done (optional)
-session.close()
