@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+
+# Add the 'database' directory to the Python path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 import click
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -6,6 +12,9 @@ from datetime import datetime
 
 # Define the engine
 engine = create_engine('sqlite:///educational_system.db', echo=True)
+
+# Create tables
+Base.metadata.create_all(bind=engine)
 
 # Function to create a session
 def create_session():
