@@ -15,7 +15,8 @@ Agricultural_Education_Hub/
 │   │   └── __init__.py
 │   └── main.py                   # Entry point of the CLI application
 │
-├── tests/                         # Unit tests and test data
+├── tests/ 
+     └── test_database.py                       # Unit tests and test data
 │
 ├── migrations/                    # Alembic migrations directory
 │
