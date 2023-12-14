@@ -1,8 +1,8 @@
 # main.py
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import sessionmaker
-from database.models import Base, User, Course
+from database.models import Base, User, Course, UserCourseProgress  # Add UserCourseProgress here
 from datetime import datetime
 
 # Connect to the database
@@ -69,6 +69,9 @@ def insert_course(session, course_name, description, instructor_id, start_date, 
     session.add(new_course)
     session.commit()
     print("Course added successfully!")
+
+# Add this line to the existing code
+Base.metadata.create_all(bind=engine)
 
 # Examples
 query_users(session)
