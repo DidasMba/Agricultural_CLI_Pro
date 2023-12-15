@@ -4,7 +4,11 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import sessionmaker
 from database.models import Base, User, Course, UserCourseProgress  # Add UserCourseProgress here
 from datetime import datetime
-from cli.courses import courses_cli #import the 'courses_cli'
+#from cli.courses import courses_cli #import the 'courses_cli'
+
+# main.py
+from cli.courses_commands import view_courses as courses_cli
+
 
 # Connect to the database
 engine = create_engine('sqlite:///educational_system.db', echo=True)  # Change the database URL as needed
