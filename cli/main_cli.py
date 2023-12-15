@@ -6,6 +6,9 @@ from sqlalchemy.orm import sessionmaker
 from ..database.models import Base, User, Course, Lesson, Assignment
 from datetime import datetime
 
+from cli.main_cli import cli  # Import the CLI
+
+
 # Define the engine
 engine = create_engine('sqlite:///educational_system.db', echo=True)
 
