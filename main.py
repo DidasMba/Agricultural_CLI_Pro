@@ -83,3 +83,7 @@ insert_course(session, 'Introduction to Python', 'Learn Python programming basic
 
 # Close the session when done (optional)
 session.close()
+
+if __name__ == '__main__':
+    cli.add_command(courses_cli)  # Add the 'courses_cli'
+    cli()
