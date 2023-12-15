@@ -5,8 +5,11 @@ from sqlalchemy.orm import sessionmaker
 from database.models import Base, User, Course, UserCourseProgress  # Add UserCourseProgress here
 from datetime import datetime
 #from cli.courses import courses_cli #import the 'courses_cli'
+from cli.courses_commands import view_courses as courses_cli
+from cli import cli  # Ajoutez cette ligne pour importer la variable 'cli'
 
 # main.py
+from sqlalchemy import create_engine
 from cli.courses_commands import view_courses as courses_cli
 
 

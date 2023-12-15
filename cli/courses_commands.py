@@ -2,7 +2,8 @@
 import click
 from sqlalchemy.orm import sessionmaker
 from database.models import Course
-from main import create_engine
+#from main import create_engine
+from sqlalchemy import create_engine
 
 # Function to create a session
 def create_session():
