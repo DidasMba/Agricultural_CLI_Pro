@@ -7,7 +7,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 import click
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database.models import Base, User, Course, Lesson, Assignment
+from database.models import Base, User, Course, Lesson, Assignment, enrollments
 from datetime import datetime
 
 # Define the engine
@@ -108,6 +108,72 @@ def submit_assignment(user, course_id, description, deadline):
     print("Assignment submitted successfully!")
 
     session.close()
+
+@cli.command(name='enroll-course')  # Update the command name
+@click.option('--user', prompt='Your username', help='Your username for course enrollment.')
+@click.option('--course-id', prompt='Course ID', type=int, help='ID of the course for enrollment.')
+def enroll_course(user, course_id):
+    """Enroll in a course."""
+    session = create_session()
+
+    # Check if the user exists
+    user_obj = session.query(User).filter_by(username=user).first()
+    if not user_obj:
+        print(f"User '{user}' not found.")
+        session.close()
+        return
+
+    # Check if the course exists
+    course = session.query(Course).get(course_id)
+    if not course:
+        print(f"Course with ID {course_id} not found.")
+        session.close()
+        return
+
+    # Check if the user is already enrolled in the course
+    enrollment = session.query(enrollments).filter_by(user_id=user_obj.user_id, course_id=course_id).first()
+    if enrollment:
+        print(f"User '{user}' is already enrolled in the course with ID {course_id}.")
+        session.close()
+        return
+
+    # Enroll the user in the course
+    session.execute(enrollments.insert().values(user_id=user_obj.user_id, course_id=course_id))
+    session.commit()
+
+    print(f"User '{user}' enrolled in the course with ID {course_id} successfully!")
+
+    session.close()
+
+@cli.command(name='view-users')  # Add the 'view-users' command
+def view_users():
+    """View all users."""
+    session = create_session()
+    users = session.query(User).all()
+    session.close()
+
+    if not users:
+        print("No users available.")
+        return
+
+    for user in users:
+        print(f"User ID: {user.user_id}, Username: {user.username}, Role: {user.role}")
+        # Add more details as needed
+
+@cli.command()
+def view_courses():
+    """View available courses."""
+    session = create_session()
+    courses = session.query(Course).all()
+    session.close()
+
+    if not courses:
+        print("No courses available.")
+        return
+
+    for course in courses:
+        print(f"Course ID: {course.course_id}, Name: {course.course_name}")
+        # Add more details as needed
 
 if __name__ == '__main__':
     cli()
