@@ -9,6 +9,7 @@ from sqlalchemy import create_engine
 # Ajoutez cette ligne au début de courses_commands.py
 # Modifiez cette ligne au début de courses_commands.py
 from database.models import Course
+from sqlalchemy.orm import Session
 
 
 
