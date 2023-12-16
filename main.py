@@ -7,6 +7,7 @@ from datetime import datetime
 from cli.courses_commands import view_courses as courses_cli
 from cli import cli
 from sqlalchemy.orm import Session
+from user_manager import UserManager
 
 
 cli.add_command(courses_cli)  # Add the 'courses_cli'
