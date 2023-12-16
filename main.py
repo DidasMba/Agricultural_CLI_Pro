@@ -2,8 +2,16 @@
 
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import sessionmaker
-from database.models import Base, User, Course, UserCourseProgress  # Add UserCourseProgress here
+from database.models import Base, User, Course, UserCourseProgress
 from datetime import datetime
+from cli.courses_commands import view_courses as courses_cli
+from cli import cli
+from sqlalchemy.orm import Session
+
+
+cli.add_command(courses_cli)  # Add the 'courses_cli'
+
+
 
 # Connect to the database
 engine = create_engine('sqlite:///educational_system.db', echo=True)  # Change the database URL as needed
@@ -82,3 +90,9 @@ insert_course(session, 'Introduction to Python', 'Learn Python programming basic
 
 # Close the session when done (optional)
 session.close()
+
+
+
+if __name__ == '__main__':
+    
+    cli()

@@ -3,6 +3,9 @@ import click
 from sqlalchemy.orm import sessionmaker
 from database.models import Course
 from main import create_engine
+# cli/courses.py
+from .courses_commands import view_courses
+
 
 # Function to create a session
 def create_session():
