@@ -8,8 +8,9 @@ from sqlalchemy import create_engine
 # Importez la classe de modèle Course
 # Ajoutez cette ligne au début de courses_commands.py
 # Modifiez cette ligne au début de courses_commands.py
-from database.models import Course
 
+from sqlalchemy.orm import Session
+from database import get_session  # Importez la fonction get_session
 
 
 # Function to create a session
@@ -28,6 +29,7 @@ def view_courses():
     session = create_session()
     courses = session.query(Course).all()
     session.close()
+    session = get_session()
 
     if not courses:
         print("No courses available.")
