@@ -6,6 +6,8 @@ from database.models import Base, User, Course, UserCourseProgress
 from datetime import datetime
 from cli.courses_commands import view_courses as courses_cli
 from cli import cli
+from sqlalchemy.orm import Session
+
 
 cli.add_command(courses_cli)  # Add the 'courses_cli'
 

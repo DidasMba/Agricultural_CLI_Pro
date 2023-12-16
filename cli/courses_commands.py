@@ -6,7 +6,11 @@ from database.models import Course
 from sqlalchemy import create_engine
 
 # Importez la classe de modèle Course
-from models import Course
+# Ajoutez cette ligne au début de courses_commands.py
+# Modifiez cette ligne au début de courses_commands.py
+from database.models import Course
+
+
 
 # Function to create a session
 def create_session():
@@ -30,5 +34,5 @@ def view_courses():
         return
 
     for course in courses:
-        print(f"Course ID: {course.course_id}, Name: {course.course_name}, Instructor: {course.instructor.username}")
+         print(f"Course ID: {course.course_id}, Course Name: {course.course_name}")
         # Add more details as needed
