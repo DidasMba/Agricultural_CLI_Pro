@@ -5,10 +5,14 @@ from database.models import Course
 #from main import create_engine
 from sqlalchemy import create_engine
 
+# Importez la classe de modèle Course
+from models import Course
+
 # Function to create a session
 def create_session():
-    Session = sessionmaker(bind=create_engine())
-    return Session()
+    #Session = sessionmaker(bind=create_engine('sqlite:///educational_system.db', echo=True))
+    #return Session()
+    return create_engine('sqlite:///educational_system.db')
 
 @click.group()
 def courses_cli():

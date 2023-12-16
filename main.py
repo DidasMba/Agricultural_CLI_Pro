@@ -7,6 +7,8 @@ from datetime import datetime
 from cli.courses_commands import view_courses as courses_cli
 from cli import cli
 
+cli.add_command(courses_cli)  # Add the 'courses_cli'
+
 
 
 # Connect to the database
@@ -87,7 +89,7 @@ insert_course(session, 'Introduction to Python', 'Learn Python programming basic
 # Close the session when done (optional)
 session.close()
 
-cli.add_command(courses_cli)  # Add the 'courses_cli'
+
 
 if __name__ == '__main__':
     
