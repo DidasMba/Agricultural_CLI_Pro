@@ -2,7 +2,7 @@
 
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import sessionmaker
-from database.models import Base, User, Course, UserCourseProgress
+from database.models import Base, User, Course, Lesson, UserCourseProgress
 from datetime import datetime
 from cli.courses_commands import view_courses as courses_cli
 from cli import cli
