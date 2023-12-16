@@ -1,9 +1,17 @@
 # cli/courses.py
 import click
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 from database.models import Course
+from database import get_session
+
+
+
+# cli/courses.py
+#import click
+#from sqlalchemy.orm import sessionmaker
+#from database.models import Course
 #from main import create_engine
-from sqlalchemy import create_engine
+#from sqlalchemy import create_engine
 
 # Importez la classe de modèle Course
 # Ajoutez cette ligne au début de courses_commands.py
@@ -26,17 +34,21 @@ def courses_cli():
 @courses_cli.command()
 def view_courses():
     """View available courses."""
-    session = create_session()
-    courses = session.query(Course).all()
-    session.close()
+    # Use the get_session function to obtain a session
     session = get_session()
 
+    try:
+        courses = session.query(Course).all()
+        
+        print("Courses:")
+        for course in courses:
+            print(f"Course ID: {course.course_id}, Course Name: {course.course_name}")
+            # Add more details as needed
 
-    courses = session.query(Course).all()
-    
-    print("Courses:")
+    finally:
+        # Close the session to release resources
+        session.close()
 
-    
-    for course in courses:
-        print(f"Course ID: {course.course_id}, Course Name: {course.course_name}")
-        # Add more details as needed
+# If this script is run directly, invoke the CLI
+if __name__ == '__main__':
+    courses_cli()
