@@ -31,10 +31,12 @@ def view_courses():
     session.close()
     session = get_session()
 
-    if not courses:
-        print("No courses available.")
-        return
 
+    courses = session.query(Course).all()
+    
+    print("Courses:")
+
+    
     for course in courses:
-         print(f"Course ID: {course.course_id}, Course Name: {course.course_name}")
+        print(f"Course ID: {course.course_id}, Course Name: {course.course_name}")
         # Add more details as needed
