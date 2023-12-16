@@ -2,7 +2,7 @@
 
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import sessionmaker
-from database.models import Base, User, Course, UserCourseProgress  # Add UserCourseProgress here
+from database.models import Base, User, Course, Lesson, UserCourseProgress  # Add Lesson here
 from datetime import datetime
 
 # Connect to the database
@@ -70,8 +70,17 @@ def insert_course(session, course_name, description, instructor_id, start_date, 
     session.commit()
     print("Course added successfully!")
 
-# Add this line to the existing code
-Base.metadata.create_all(bind=engine)
+def insert_lesson(session, course_id, lesson_title, content, video_audio_links):
+    new_lesson = Lesson(
+        course_id=course_id,
+        lesson_title=lesson_title,
+        content=content,
+        video_audio_links=video_audio_links
+    )
+
+    session.add(new_lesson)
+    session.commit()
+    print(f"Lesson added successfully: {new_lesson}")
 
 # Examples
 query_users(session)
@@ -79,6 +88,9 @@ insert_user(session, 'daniel_moan', 'hashed_password', 'student')
 
 query_courses(session)
 insert_course(session, 'Introduction to Python', 'Learn Python programming basics', 1, '2023-01-01', '2023-02-01')
+
+# Add lessons
+insert_lesson(session, course_id=1, lesson_title='Introduction to Python', content='This is the content.', video_audio_links='video_link')
 
 # Close the session when done (optional)
 session.close()

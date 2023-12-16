@@ -5,10 +5,12 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import click
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from database.models import Base, User, Course, Lesson, Assignment, enrollments
 from datetime import datetime
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, Table
+from sqlalchemy.orm import sessionmaker, declarative_base
+from database.models import User, Course, Lesson, Assignment, enrollments
+
+Base = declarative_base()
 
 # Define the engine
 engine = create_engine('sqlite:///educational_system.db', echo=True)
