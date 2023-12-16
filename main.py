@@ -2,7 +2,7 @@
 
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import sessionmaker
-from database.models import Base, User, Course, UserCourseProgress
+from database.models import Base, User, Course, Lesson, UserCourseProgress
 from datetime import datetime
 from cli.courses_commands import view_courses as courses_cli
 from cli import cli
@@ -16,14 +16,12 @@ cli.add_command(courses_cli)  # Add the 'courses_cli'
 # Connect to the database
 engine = create_engine('sqlite:///educational_system.db', echo=True)  # Change the database URL as needed
 
-# Create tables
 Base.metadata.create_all(bind=engine)
 
 # Create a session to interact with the database
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Query and print all users
 def query_users(session):
     users = session.query(User).all()
     for user in users:
@@ -78,8 +76,17 @@ def insert_course(session, course_name, description, instructor_id, start_date, 
     session.commit()
     print("Course added successfully!")
 
-# Add this line to the existing code
-Base.metadata.create_all(bind=engine)
+def insert_lesson(session, course_id, lesson_title, content, video_audio_links):
+    new_lesson = Lesson(
+        course_id=course_id,
+        lesson_title=lesson_title,
+        content=content,
+        video_audio_links=video_audio_links
+    )
+
+    session.add(new_lesson)
+    session.commit()
+    print(f"Lesson added successfully: {new_lesson}")
 
 # Examples
 query_users(session)
@@ -87,6 +94,9 @@ insert_user(session, 'daniel_moan', 'hashed_password', 'student')
 
 query_courses(session)
 insert_course(session, 'Introduction to Python', 'Learn Python programming basics', 1, '2023-01-01', '2023-02-01')
+
+# Add lessons
+insert_lesson(session, course_id=1, lesson_title='Introduction to Python', content='This is the content.', video_audio_links='video_link')
 
 # Close the session when done (optional)
 session.close()
