@@ -117,6 +117,18 @@ class AssignmentManager:
             'grade': '',
         })
 
+    @staticmethod
+    def submit_assignment(student_id, lesson_id, assignment_content):
+        # Simulate database insertion
+        AssignmentManager.assignments.append({
+            'student_id': student_id,
+            'lesson_id': lesson_id,
+            'content': assignment_content,
+            'status': 'pending',
+            'feedback': '',
+            'grade': '',
+        })
+
 
 
 if __name__ == '__main__':
