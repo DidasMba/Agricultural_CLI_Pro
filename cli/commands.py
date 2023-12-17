@@ -284,6 +284,33 @@ def insert_lesson(course_id, lesson_title, content, video_audio_links):
 
     session.close()
 
+@cli.command()
+@click.option('--username', prompt='Enter your username', help='Your username for registration.')
+@click.option('--password', prompt='Enter your password', hide_input=True, confirmation_prompt=True, help='Your password for registration.')
+@click.option('--role', prompt='Enter your role', help='Your role (e.g., student, instructor) for registration.')
+def register_user(username, password, role):
+    """Register a new user."""
+    session = create_session()
+
+    # Check if the username already exists
+    existing_user = session.query(User).filter_by(username=username).first()
+    if existing_user:
+        print(f"Username '{username}' is already taken. Please choose another username.")
+        session.close()
+        return
+
+    # Hash the password (use a secure method in a real-world scenario)
+    password_hash = hash_password(password)
+
+    # Create a new user
+    new_user = User(username=username, password_hash=password_hash, role=role)
+    session.add(new_user)
+    session.commit()
+
+    print("User registered successfully!")
+
+    session.close()
+
 # ... (other commands)
 
 # Keep the rest of the existing code unchanged
