@@ -1,3 +1,5 @@
+# commands.py
+
 import sys
 from pathlib import Path
 
@@ -8,10 +10,9 @@ import click
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, Table
 from sqlalchemy.orm import sessionmaker, declarative_base
-from database.models import User, Course, Lesson, Assignment, enrollments
+from database.models import User, Course, Lesson, Assignment, Submission, user_course_enrollments
 
 Base = declarative_base()
-
 
 # Define the engine
 engine = create_engine('sqlite:///educational_system.db', echo=True)
@@ -23,6 +24,11 @@ Base.metadata.create_all(bind=engine)
 def create_session():
     Session = sessionmaker(bind=engine)
     return Session()
+
+def hash_password(password):
+    # Implement a secure password hashing method (e.g., bcrypt)
+    # Replace this with an actual implementation
+    return password
 
 @click.group()
 def cli():
@@ -112,7 +118,7 @@ def submit_assignment(user, course_id, description, deadline):
 
     session.close()
 
-@cli.command(name='enroll-course')  # Update the command name
+@cli.command(name='enroll-course')
 @click.option('--user', prompt='Your username', help='Your username for course enrollment.')
 @click.option('--course-id', prompt='Course ID', type=int, help='ID of the course for enrollment.')
 def enroll_course(user, course_id):
@@ -134,19 +140,23 @@ def enroll_course(user, course_id):
         return
 
     # Check if the user is already enrolled in the course
-    enrollment = session.query(enrollments).filter_by(user_id=user_obj.user_id, course_id=course_id).first()
+    enrollment = session.query(user_course_enrollments).filter_by(user_id=user_obj.user_id, course_id=course_id).first()
     if enrollment:
         print(f"User '{user}' is already enrolled in the course with ID {course_id}.")
         session.close()
         return
 
     # Enroll the user in the course
-    session.execute(enrollments.insert().values(user_id=user_obj.user_id, course_id=course_id))
-    session.commit()
-
-    print(f"User '{user}' enrolled in the course with ID {course_id} successfully!")
-
-    session.close()
+    try:
+        new_enrollment = user_course_enrollments.insert().values(user_id=user_obj.user_id, course_id=course_id)
+        session.execute(new_enrollment)
+        session.commit()
+        print(f"User '{user}' enrolled in the course with ID {course_id} successfully!")
+    except Exception as e:
+        print(f"Error: {e}")
+        session.rollback()
+    finally:
+        session.close()
 
 @cli.command(name='view-users')  # Add the 'view-users' command
 def view_users():
@@ -177,6 +187,33 @@ def view_courses():
     for course in courses:
         print(f"Course ID: {course.course_id}, Name: {course.course_name}")
         # Add more details as needed
+
+@cli.command()
+@click.option('--username', prompt='Username', help='Username for registration.')
+@click.option('--password', prompt='Password', hide_input=True, confirmation_prompt=True, help='Password for registration.')
+def register_user(username, password):
+    """Register a new user."""
+    session = create_session()
+
+    # Check if the username is already taken
+    if session.query(User).filter_by(username=username).first():
+        print(f"Username '{username}' is already taken. Please choose a different username.")
+        session.close()
+        return
+
+    # Create a new user
+    new_user = User(
+        username=username,
+        password_hash=hash_password(password),
+        role='student'  # Set the default role for registration (you can change this as needed)
+    )
+
+    session.add(new_user)
+    session.commit()
+
+    print(f"User '{username}' registered successfully!")
+
+    session.close()
 
 if __name__ == '__main__':
     cli()

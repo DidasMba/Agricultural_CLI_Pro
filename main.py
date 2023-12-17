@@ -2,19 +2,19 @@
 
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import sessionmaker
+import sys
+from pathlib import Path
+import os
 from database.models import Base, User, Course, Lesson, UserCourseProgress
 from datetime import datetime
-from cli.courses_commands import view_courses as courses_cli
 from cli import cli
 from sqlalchemy.orm import Session
 
-
-cli.add_command(courses_cli)  # Add the 'courses_cli'
-
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Connect to the database
-engine = create_engine('sqlite:///educational_system.db', echo=True)  # Change the database URL as needed
+engine = create_engine('sqlite:///educational_system.db', echo=True)
 
 Base.metadata.create_all(bind=engine)
 
