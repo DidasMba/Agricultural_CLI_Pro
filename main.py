@@ -129,6 +129,19 @@ class AssignmentManager:
             'grade': '',
         })
 
+    @staticmethod
+    def list_pending_assignments():
+        return [i for i, assignment in enumerate(AssignmentManager.assignments) if assignment['status'] == 'pending']
+
+        # CLI Commands
+    def create_assignment_cli():
+    instructor_id = input("Enter your instructor ID: ")
+    lesson_id = input("Enter the lesson ID for the assignment: ")
+    assignment_content = input("Enter the assignment content: ")
+    AssignmentManager.create_assignment(instructor_id, lesson_id, assignment_content)
+  
+ 
+
 
 
 if __name__ == '__main__':
