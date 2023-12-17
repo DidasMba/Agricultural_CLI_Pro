@@ -132,6 +132,20 @@ class AssignmentManager:
     @staticmethod
     def list_pending_assignments():
         return [i for i, assignment in enumerate(AssignmentManager.assignments) if assignment['status'] == 'pending']
+        print("Pending Assignments:")
+for assignment in pending_assignments:
+    print(f"ID: {assignment['id']}, Content: {assignment['content']}")
+
+assignment_id = int(input("Select an assignment to review (enter its ID): "))
+feedback = input("Provide feedback: ")
+grade = input("Assign a grade: ")
+
+try:
+    AssignmentManager.review_assignment(assignment_id, feedback, grade)
+    print("Assignment reviewed successfully.")
+except ValueError as e:
+    print(f"Error: {e}")
+
 
 if __name__ == '__main__':
     
