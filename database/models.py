@@ -35,11 +35,11 @@ class Lesson(Base):
 class Assignment(Base):
     __tablename__ = 'assignments'
     assignment_id = Column(Integer, primary_key=True)
-    lesson_id = Column(Integer, ForeignKey('lessons.lesson_id'))
+    lesson_id = Column(Integer, ForeignKey('lessons.lesson_id'))  # Correct foreign key reference
     instructor_id = Column(Integer, ForeignKey('users.user_id'))
     description = Column(String)
     deadline = Column(Date)
-    lesson = relationship('Lesson', back_populates='assignments')  # Add this line
+    lesson = relationship('Lesson', back_populates='assignments')
     submissions = relationship('Submission', back_populates='assignment')
 
 class Submission(Base):

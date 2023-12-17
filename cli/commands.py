@@ -51,9 +51,10 @@ def view_lessons():
 
 @cli.command()
 @click.option('--user', prompt='Your username', help='Your username for assignment submission.')
-@click.option('--lesson-id', prompt='Lesson ID', type=int, help='ID of the lesson you want to view.')
-def view_lesson(user, lesson_id):
-    """View a specific lesson."""
+@click.option('--description', prompt='Assignment description', help='Description of the assignment.')
+@click.option('--deadline', prompt='Assignment deadline (YYYY-MM-DD)', help='Deadline for assignment submission.')
+def submit_assignment(user, description, deadline):
+    """Submit an assignment."""
     session = create_session()
 
     # Check if the user exists
@@ -63,17 +64,42 @@ def view_lesson(user, lesson_id):
         session.close()
         return
 
-    # Check if the lesson exists
-    lesson = session.query(Lesson).get(lesson_id)
-    if not lesson:
-        print(f"Lesson with ID {lesson_id} not found.")
+    # View available courses
+    courses = session.query(Course).all()
+    if not courses:
+        print("No courses available.")
         session.close()
         return
 
-    # Implement logic for viewing the lesson content
-    print(f"Viewing Lesson {lesson_id} - {lesson.lesson_title}")
-    print("Lesson Content:")
-    print(lesson.content)
+    print("Available Courses:")
+    for course in courses:
+        print(f"Course ID: {course.course_id}, Name: {course.course_name}")
+
+    # Prompt the user to select a course
+    course_id = click.prompt('Enter the Course ID for assignment submission', type=int)
+
+    # Check if the selected course exists
+    course = session.query(Course).get(course_id)
+    if not course:
+        print(f"Course with ID {course_id} not found.")
+        session.close()
+        return
+
+    # Convert deadline to datetime object
+    deadline_obj = datetime.strptime(deadline, '%Y-%m-%d').date()
+
+    # Create a new assignment
+    new_assignment = Assignment(
+        course_id=course_id,
+        instructor_id=course.instructor_id,
+        description=description,
+        deadline=deadline_obj
+    )
+
+    session.add(new_assignment)
+    session.commit()
+
+    print("Assignment submitted successfully!")
 
     session.close()
 
@@ -189,31 +215,78 @@ def view_courses():
         # Add more details as needed
 
 @cli.command()
-@click.option('--username', prompt='Username', help='Username for registration.')
-@click.option('--password', prompt='Password', hide_input=True, confirmation_prompt=True, help='Password for registration.')
-def register_user(username, password):
-    """Register a new user."""
+@click.option('--user', prompt='Your username', help='Your username for assignment submission.')
+@click.option('--lesson-id', prompt='Lesson ID', type=int, help='ID of the lesson for assignment submission.')
+@click.option('--description', prompt='Assignment description', help='Description of the assignment.')
+@click.option('--deadline', prompt='Assignment deadline (YYYY-MM-DD)', help='Deadline for assignment submission.')
+def submit_assignment(user, lesson_id, description, deadline):  # Updated argument to lesson_id
+    """Submit an assignment."""
     session = create_session()
 
-    # Check if the username is already taken
-    if session.query(User).filter_by(username=username).first():
-        print(f"Username '{username}' is already taken. Please choose a different username.")
+    # Check if the user exists
+    user_obj = session.query(User).filter_by(username=user).first()
+    if not user_obj:
+        print(f"User '{user}' not found.")
         session.close()
         return
 
-    # Create a new user
-    new_user = User(
-        username=username,
-        password_hash=hash_password(password),
-        role='student'  # Set the default role for registration (you can change this as needed)
+    # Check if the lesson exists
+    lesson = session.query(Lesson).get(lesson_id)
+    if not lesson:
+        print(f"Lesson with ID {lesson_id} not found.")
+        session.close()
+        return
+
+    # Convert deadline to datetime object
+    deadline_obj = datetime.strptime(deadline, '%Y-%m-%d').date()
+
+    # Create a new assignment using lesson_id instead of course_id
+    new_assignment = Assignment(
+        lesson_id=lesson_id,  # Use lesson_id instead of course_id
+        instructor_id=lesson.course.instructor_id,
+        description=description,
+        deadline=deadline_obj
     )
 
-    session.add(new_user)
+    session.add(new_assignment)
     session.commit()
 
-    print(f"User '{username}' registered successfully!")
+    print("Assignment submitted successfully!")
 
     session.close()
+
+@cli.command(name='insert-lesson')
+@click.option('--course-id', prompt='Course ID', type=int, help='ID of the course for the lesson.')
+@click.option('--lesson-title', prompt='Lesson Title', help='Title of the lesson.')
+@click.option('--content', prompt='Lesson Content', help='Content of the lesson.')
+@click.option('--video-audio-links', prompt='Video/Audio Links', help='Links to video/audio resources.')
+def insert_lesson(course_id, lesson_title, content, video_audio_links):
+    """Insert a new lesson."""
+    session = create_session()
+
+    # Check if the course exists
+    course = session.query(Course).get(course_id)
+    if not course:
+        print(f"Course with ID {course_id} not found.")
+        session.close()
+        return
+
+    new_lesson = Lesson(
+        course_id=course_id,
+        lesson_title=lesson_title,
+        content=content,
+        video_audio_links=video_audio_links
+    )
+
+    session.add(new_lesson)
+    session.commit()
+    print(f"Lesson added successfully: {new_lesson}")
+
+    session.close()
+
+# ... (other commands)
+
+# Keep the rest of the existing code unchanged
 
 if __name__ == '__main__':
     cli()

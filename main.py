@@ -77,6 +77,12 @@ def insert_course(session, course_name, description, instructor_id, start_date, 
     print("Course added successfully!")
 
 def insert_lesson(session, course_id, lesson_title, content, video_audio_links):
+    # Check if the course exists
+    course = session.query(Course).get(course_id)
+    if not course:
+        print(f"Course with ID {course_id} not found.")
+        return
+
     new_lesson = Lesson(
         course_id=course_id,
         lesson_title=lesson_title,
@@ -97,7 +103,6 @@ insert_course(session, 'Introduction to Python', 'Learn Python programming basic
 
 # Add lessons
 insert_lesson(session, course_id=1, lesson_title='Introduction to Python', content='This is the content.', video_audio_links='video_link')
-
 # Close the session when done (optional)
 session.close()
 
