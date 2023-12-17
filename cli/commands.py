@@ -130,6 +130,33 @@ def submit_assignment(user, course_id, description, deadline):
 
     session.close()
 
+def create_assignment_cli():
+    instructor_id = input("Enter your instructor ID: ")
+    lesson_id = input("Enter the lesson ID for the assignment: ")
+    assignment_content = input("Enter the assignment content: ")
+    AssignmentManager.create_assignment(instructor_id, lesson_id, assignment_content)
+
+def submit_assignment_cli():
+    student_id = input("Enter your student ID: ")
+    lesson_id = input("Enter the lesson ID for the assignment: ")
+    assignment_content = input("Enter the assignment content: ")
+    AssignmentManager.submit_assignment(student_id, lesson_id, assignment_content)
+
+def review_assignment_cli():
+    pending_assignments = AssignmentManager.list_pending_assignments()
+    if not pending_assignments:
+        print("No pending assignments.")
+        return
+
+    assignment_id = int(input("Select an assignment to review (enter its ID): "))
+    feedback = input("Provide feedback: ")
+    grade = input("Assign a grade: ")
+    AssignmentManager.review_assignment(assignment_id, feedback, grade)
+
+# Usage
+create_assignment_cli()
+submit_assignment_cli()
+
 @cli.command(name='enroll-course')
 @click.option('--user', prompt='Your username', help='Your username for course enrollment.')
 @click.option('--course-id', prompt='Course ID', type=int, help='ID of the course for enrollment.')

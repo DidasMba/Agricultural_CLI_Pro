@@ -129,7 +129,9 @@ class AssignmentManager:
             'grade': '',
         })
 
-
+    @staticmethod
+    def list_pending_assignments():
+        return [i for i, assignment in enumerate(AssignmentManager.assignments) if assignment['status'] == 'pending']
 
 if __name__ == '__main__':
     
