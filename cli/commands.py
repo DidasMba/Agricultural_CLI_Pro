@@ -104,12 +104,24 @@ def submit_assignment(user, course_id, description, deadline):
     deadline_obj = datetime.strptime(deadline, '%Y-%m-%d').date()
 
     # Create a new assignment
-    new_assignment = Assignment(
-        course_id=course_id,
-        instructor_id=course.instructor_id,  # Assuming the instructor is responsible for assignments
-        description=description,
-        deadline=deadline_obj
-    )
+    class Assignment(Base):
+    __tablename__ = 'assignments'
+
+    assignment_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
+    course_id = Column(Integer, ForeignKey('courses.course_id'), nullable=False)
+    instructor_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
+    description = Column(String, nullable=False)
+    deadline = Column(Date, nullable=False)
+
+    # Add a relationship to the User model
+    user = relationship('User', back_populates='assignments')
+
+    # Add a relationship to the Course model
+    course = relationship('Course', back_populates='assignments')
+
+    # Add this line to the Course model
+    Course.assignments = relationship('Assignment', back_populates='course')
 
     session.add(new_assignment)
     session.commit()

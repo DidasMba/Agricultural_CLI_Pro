@@ -101,6 +101,22 @@ insert_lesson(session, course_id=1, lesson_title='Introduction to Python', conte
 # Close the session when done (optional)
 session.close()
 
+class AssignmentManager:
+    assignments = []
+    instructors = []
+
+    @staticmethod
+    def create_assignment(instructor_id, lesson_id, assignment_content):
+        # Simulate database insertion
+        AssignmentManager.assignments.append({
+            'instructor_id': instructor_id,
+            'lesson_id': lesson_id,
+            'content': assignment_content,
+            'status': 'pending',
+            'feedback': '',
+            'grade': '',
+        })
+
 
 
 if __name__ == '__main__':
