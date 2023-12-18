@@ -104,24 +104,12 @@ def submit_assignment(user, course_id, description, deadline):
     deadline_obj = datetime.strptime(deadline, '%Y-%m-%d').date()
 
     # Create a new assignment
-    class Assignment(Base):
-    __tablename__ = 'assignments'
-
-    assignment_id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
-    course_id = Column(Integer, ForeignKey('courses.course_id'), nullable=False)
-    instructor_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
-    description = Column(String, nullable=False)
-    deadline = Column(Date, nullable=False)
-
-    # Add a relationship to the User model
-    user = relationship('User', back_populates='assignments')
-
-    # Add a relationship to the Course model
-    course = relationship('Course', back_populates='assignments')
-
-    # Add this line to the Course model
-    Course.assignments = relationship('Assignment', back_populates='course')
+    new_assignment = Assignment(
+        course_id=course_id,
+        instructor_id=course.instructor_id,  # Assuming the instructor is responsible for assignments
+        description=description,
+        deadline=deadline_obj
+    )
 
     session.add(new_assignment)
     session.commit()
@@ -129,33 +117,6 @@ def submit_assignment(user, course_id, description, deadline):
     print("Assignment submitted successfully!")
 
     session.close()
-
-def create_assignment_cli():
-    instructor_id = input("Enter your instructor ID: ")
-    lesson_id = input("Enter the lesson ID for the assignment: ")
-    assignment_content = input("Enter the assignment content: ")
-    AssignmentManager.create_assignment(instructor_id, lesson_id, assignment_content)
-
-def submit_assignment_cli():
-    student_id = input("Enter your student ID: ")
-    lesson_id = input("Enter the lesson ID for the assignment: ")
-    assignment_content = input("Enter the assignment content: ")
-    AssignmentManager.submit_assignment(student_id, lesson_id, assignment_content)
-
-def review_assignment_cli():
-    pending_assignments = AssignmentManager.list_pending_assignments()
-    if not pending_assignments:
-        print("No pending assignments.")
-        return
-
-    assignment_id = int(input("Select an assignment to review (enter its ID): "))
-    feedback = input("Provide feedback: ")
-    grade = input("Assign a grade: ")
-    AssignmentManager.review_assignment(assignment_id, feedback, grade)
-
-# Usage
-create_assignment_cli()
-submit_assignment_cli()
 
 @cli.command(name='enroll-course')
 @click.option('--user', prompt='Your username', help='Your username for course enrollment.')
