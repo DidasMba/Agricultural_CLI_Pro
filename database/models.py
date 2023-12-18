@@ -5,22 +5,22 @@ from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
-class User(Base):
-    __tablename__ = 'users'
-    user_id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True, nullable=False)
-    password_hash = Column(String, nullable=False)
-    role = Column(String, nullable=False)
+# class User(Base):
+#     __tablename__ = 'users'
+#     user_id = Column(Integer, primary_key=True)
+#     username = Column(String, unique=True, nullable=False)
+#     password_hash = Column(String, nullable=False)
+#     role = Column(String, nullable=False)
 
-class Course(Base):
-    __tablename__ = 'courses'
-    course_id = Column(Integer, primary_key=True)
-    course_name = Column(String, nullable=False)
-    description = Column(String)
-    instructor_id = Column(Integer, ForeignKey('users.user_id'))
-    start_date = Column(Date)
-    end_date = Column(Date)
-    lessons = relationship('Lesson', back_populates='course')
+# class Course(Base):
+#     __tablename__ = 'courses'
+#     course_id = Column(Integer, primary_key=True)
+#     course_name = Column(String, nullable=False)
+#     description = Column(String)
+#     instructor_id = Column(Integer, ForeignKey('users.user_id'))
+#     start_date = Column(Date)
+#     end_date = Column(Date)
+#     lessons = relationship('Lesson', back_populates='course')
 
 class Lesson(Base):
     __tablename__ = 'lessons'
@@ -42,19 +42,19 @@ class Assignment(Base):
     lesson = relationship('Lesson', back_populates='assignments')  # Add this line
     submissions = relationship('Submission', back_populates='assignment')
 
-# class Submission(Base):
-#     __tablename__ = 'submissions'
-#     submission_id = Column(Integer, primary_key=True)
-#     assignment_id = Column(Integer, ForeignKey('assignments.assignment_id'))
-#     student_id = Column(Integer, ForeignKey('users.user_id'))
-#     submission_date = Column(Date)
-#     content = Column(String)
-#     assignment = relationship('Assignment', back_populates='submissions')
+class Submission(Base):
+    __tablename__ = 'submissions'
+    submission_id = Column(Integer, primary_key=True)
+    assignment_id = Column(Integer, ForeignKey('assignments.assignment_id'))
+    student_id = Column(Integer, ForeignKey('users.user_id'))
+    submission_date = Column(Date)
+    content = Column(String)
+    assignment = relationship('Assignment', back_populates='submissions')
 
-# user_course_enrollments = Table(
-#     'user_course_enrollments',
-#     Base.metadata,
-#     Column('enrollment_id', Integer, primary_key=True),
-#     Column('user_id', Integer, ForeignKey('users.user_id')),
-#     Column('course_id', Integer, ForeignKey('courses.course_id'))
-# )
+user_course_enrollments = Table(
+    'user_course_enrollments',
+    Base.metadata,
+    Column('enrollment_id', Integer, primary_key=True),
+    Column('user_id', Integer, ForeignKey('users.user_id')),
+    Column('course_id', Integer, ForeignKey('courses.course_id'))
+)
