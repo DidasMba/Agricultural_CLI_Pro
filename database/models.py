@@ -5,22 +5,22 @@ from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
-# class User(Base):
-#     __tablename__ = 'users'
-#     user_id = Column(Integer, primary_key=True)
-#     username = Column(String, unique=True, nullable=False)
-#     password_hash = Column(String, nullable=False)
-#     role = Column(String, nullable=False)
+class User(Base):
+    __tablename__ = 'users'
+    user_id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)
+    role = Column(String, nullable=False)
 
-# class Course(Base):
-#     __tablename__ = 'courses'
-#     course_id = Column(Integer, primary_key=True)
-#     course_name = Column(String, nullable=False)
-#     description = Column(String)
-#     instructor_id = Column(Integer, ForeignKey('users.user_id'))
-#     start_date = Column(Date)
-#     end_date = Column(Date)
-#     lessons = relationship('Lesson', back_populates='course')
+class Course(Base):
+    __tablename__ = 'courses'
+    course_id = Column(Integer, primary_key=True)
+    course_name = Column(String, nullable=False)
+    description = Column(String)
+    instructor_id = Column(Integer, ForeignKey('users.user_id'))
+    start_date = Column(Date)
+    end_date = Column(Date)
+    lessons = relationship('Lesson', back_populates='course')
 
 class Lesson(Base):
     __tablename__ = 'lessons'
