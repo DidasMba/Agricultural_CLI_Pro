@@ -42,19 +42,19 @@ class Assignment(Base):
     lesson = relationship('Lesson', back_populates='assignments')  # Add this line
     submissions = relationship('Submission', back_populates='assignment')
 
-class Submission(Base):
-    __tablename__ = 'submissions'
-    submission_id = Column(Integer, primary_key=True)
-    assignment_id = Column(Integer, ForeignKey('assignments.assignment_id'))
-    student_id = Column(Integer, ForeignKey('users.user_id'))
-    submission_date = Column(Date)
-    content = Column(String)
-    assignment = relationship('Assignment', back_populates='submissions')
+# class Submission(Base):
+#     __tablename__ = 'submissions'
+#     submission_id = Column(Integer, primary_key=True)
+#     assignment_id = Column(Integer, ForeignKey('assignments.assignment_id'))
+#     student_id = Column(Integer, ForeignKey('users.user_id'))
+#     submission_date = Column(Date)
+#     content = Column(String)
+#     assignment = relationship('Assignment', back_populates='submissions')
 
-user_course_enrollments = Table(
-    'user_course_enrollments',
-    Base.metadata,
-    Column('enrollment_id', Integer, primary_key=True),
-    Column('user_id', Integer, ForeignKey('users.user_id')),
-    Column('course_id', Integer, ForeignKey('courses.course_id'))
-)
+# user_course_enrollments = Table(
+#     'user_course_enrollments',
+#     Base.metadata,
+#     Column('enrollment_id', Integer, primary_key=True),
+#     Column('user_id', Integer, ForeignKey('users.user_id')),
+#     Column('course_id', Integer, ForeignKey('courses.course_id'))
+# )
